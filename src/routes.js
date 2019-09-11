@@ -2,7 +2,8 @@ import React from "react";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import Register from "./pages/Register";
 import { isAuthenticated } from "./services/auth";
-
+import Login from "./pages/Login";
+import Tasks from "./pages/Tasks";
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
@@ -19,9 +20,9 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
 const Routes = () => (
   <BrowserRouter>
     <Switch>
-      <Route exact path="/" component={() => <h1>Login</h1>} />
-      <Route path="/register" component={Register} />
-      <PrivateRoute path="/taks" component={() => <h1>Tasks</h1>} />
+      <Route exact path="/register" component={Register} />
+      <Route path="/" component={Tasks} />
+      <PrivateRoute path="/tasks" component={() => <h1>Tasks</h1>} />
       <Route path="*" component={() => <h1>Page not found</h1>} />
     </Switch>
   </BrowserRouter>

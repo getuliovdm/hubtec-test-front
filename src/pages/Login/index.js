@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { SignUp } from "./signup";
+import SingIn from "./signin";
 
-class Register extends Component {
+class Login extends Component {
   state = {
     username: "",
     email: "",
@@ -13,7 +13,7 @@ class Register extends Component {
     
   };
 
-  handleRegister = e => {
+  handleLogin = e => {
     e.preventDefault();
     alert("Eu vou te registrar");
   };
@@ -22,10 +22,10 @@ class Register extends Component {
     
     return (
       <React.Fragment>
-        <SignUp></SignUp>
-      </React.Fragment>
+        <SingIn>  </SingIn>
+       </React.Fragment>
     );
   }
 }
 
-export default Register;
+export default Login;
