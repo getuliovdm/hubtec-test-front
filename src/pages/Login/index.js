@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import SingIn from "./signin";
+import { SignIn } from "./signin";
 
 class Login extends Component {
   state = {
@@ -22,7 +22,7 @@ class Login extends Component {
     
     return (
       <React.Fragment>
-        <SingIn>  </SingIn>
+        <SignIn>  </SignIn>
        </React.Fragment>
     );
   }

@@ -40,8 +40,8 @@ export const SignUp = withRouter(({history}) => {
         password: ""
       }}
       onSubmit={async(values, actions) => {
-        alert(JSON.stringify(values));
-        await api.post("users/register", values );
+        const response = await api.post("users/register", values );
+        alert(response.data.message);
         history.push("/");
 
         actions.setSubmitting(false);
