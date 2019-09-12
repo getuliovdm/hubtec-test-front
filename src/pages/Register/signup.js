@@ -11,24 +11,24 @@ import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
+import useStyles from './signup_styles';
 import Container from "@material-ui/core/Container";
-import api from '../../services/api';
-import * as Yup from "yup";
+import api from '../../api';
 import { withRouter } from "react-router-dom";
-const SignupSchema = Yup.object().shape({
-  userName: Yup.string()
-    .min(2, "Too Short!")
-    .max(10, "Too Long!")
-    .required("Required"),
-  password: Yup.string()
-    .min(2, "Too Short!")
-    .max(50, "Too Long!")
-    .required("Required"),
-  email: Yup.string()
-    .email("Invalid email")
-    .required("Required")
-});
+import SignupSchema from "./signup_yup";
+function Copyright() {
+  return (
+    <Typography variant="body2" color="textSecondary" align="center">
+      {"Copyright © "}
+      <Link color="inherit" href="https://material-ui.com/">
+        Your Website
+      </Link>{" "}
+      {new Date().getFullYear()}
+      {"."}
+    </Typography>
+  );
+}
+
 
 export const SignUp = withRouter(({history}) => {
   const classes = useStyles();
@@ -40,10 +40,8 @@ export const SignUp = withRouter(({history}) => {
         password: ""
       }}
       onSubmit={async(values, actions) => {
-        const response = await api.post("users/register", values );
-        alert(response.data.message);
+        await api.post("users/register", values );
         history.push("/");
-
         actions.setSubmitting(false);
       }}
       validationSchema={SignupSchema}
@@ -63,7 +61,7 @@ export const SignUp = withRouter(({history}) => {
                   <Field
                     variant="outlined"
                     fullWidth
-                    label="Username"
+                    label="Nome do Usuário"
                     name="userName"
                     component={TextField}
                   />
@@ -72,7 +70,7 @@ export const SignUp = withRouter(({history}) => {
                   <Field
                     variant="outlined"
                     fullWidth
-                    label="Email Address"
+                    label="Endereço de Email"
                     name="email"
                     autoComplete="email"
                     component={TextField}
@@ -83,7 +81,7 @@ export const SignUp = withRouter(({history}) => {
                     variant="outlined"
                     fullWidth
                     name="password"
-                    label="Password"
+                    label="Senha"
                     type="password"
                     autoComplete="current-password"
                     component={TextField}
@@ -99,7 +97,17 @@ export const SignUp = withRouter(({history}) => {
               >
                 Sign Up
               </Button>
+              <Grid >
+              <Grid item>
+                <Link href="/login" variant="body2">
+                  {"Voltar para a tela de Login? Clique aqui!"}
+                </Link>
+              </Grid>
+            </Grid>
             </Form>
+            <Box mt={8}>
+                <Copyright />
+            </Box>
           </div>
         </Container>
       )}
@@ -107,41 +115,6 @@ export const SignUp = withRouter(({history}) => {
   );
 });
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
 
-const useStyles = makeStyles(theme => ({
-  "@global": {
-    body: {
-      backgroundColor: theme.palette.common.white
-    }
-  },
-  paper: {
-    marginTop: theme.spacing(8),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center"
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main
-  },
-  form: {
-    width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(3)
-  },
-  submit: {
-    width: "100%",
-    margin: theme.spacing(3, 0, 0, 0)
-  }
-}));
+
+

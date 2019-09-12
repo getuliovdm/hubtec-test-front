@@ -9,23 +9,27 @@ import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import api from '../../services/api';
-import * as Yup from "yup";
+import api from "../../api";
 import { withRouter } from "react-router-dom";
-import { login } from '../../services/auth';
-const SignupSchema = Yup.object().shape({
-  password: Yup.string()
-    .min(2, "Too Short!")
-    .max(50, "Too Long!")
-    .required("Required"),
-  email: Yup.string()
-    .email("Invalid email")
-    .required("Required")
-});
+import { login } from "../../auth";
+import useStyles from "./signin_styles";
+import SignInSchema from "./signin_yup";
+import { useStoreActions } from "easy-peasy";
+function Copyright() {
+  return (
+    <Typography variant="body2" color="textSecondary" container>
+      {"Copyright © "}
+      <Link color="inherit" href="https://material-ui.com/">
+        Tasks Manager HubTec
+      </Link>
+      {new Date().getFullYear()}
+    </Typography>
+  );
+}
 
-export const SignIn = withRouter(({ history }) => {
+const SignIn = withRouter(({ history }) => {
+  const setUserId = useStoreActions(action => action.taskStore.setUserId);
   const classes = useStyles();
   return (
     <Formik
@@ -34,13 +38,16 @@ export const SignIn = withRouter(({ history }) => {
         password: ""
       }}
       onSubmit={async (values, actions) => {
-      const response =  await api.post("login", values);
-      alert(JSON.stringify(response.data));
-      login(response.data.token);  
-      history.push("/tasks")
-      actions.setSubmitting(false);
+        
+        const response = await api.post("login", values);
+        localStorage.setItem('userId', response.data.user.id);
+        alert(JSON.stringify(response.data));
+        setUserId(response.data.user.id);
+        login(response.data.token);
+        history.push("/tasks");
+        actions.setSubmitting(false);
       }}
-      validationSchema={SignupSchema}
+      validationSchema={SignInSchema}
       render={formikProps => (
         <Container component="main" maxWidth="xs">
           <CssBaseline />
@@ -85,60 +92,20 @@ export const SignIn = withRouter(({ history }) => {
                 Sign In
               </Button>
             </Form>
-            
-              <Grid container>
-                <Grid item>
-                  <Link href="/register" variant="body2">
-                    {"Don't have an account? Sign Up"}
-                  </Link>
-                </Grid>
+            <Grid>
+              <Grid item>
+                <Link href="/register" variant="body2">
+                  {"Você não possui uma Conta? Por favor clique em Registrar"}
+                </Link>
               </Grid>
-              <Box mt={8}>
-                <Copyright />
-              </Box>
+            </Grid>
+            <Box mt={8}>
+              <Copyright />
+            </Box>
           </div>
         </Container>
       )}
     />
   );
 });
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
-
-const useStyles = makeStyles(theme => ({
-  "@global": {
-    body: {
-      backgroundColor: theme.palette.common.white
-    }
-  },
-  paper: {
-    marginTop: theme.spacing(8),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center"
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main
-  },
-  form: {
-    width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(3)
-  },
-  submit: {
-    width: "100%",
-    margin: theme.spacing(3, 0, 0, 0)
-  }
-}));
-
+export default SignIn;
